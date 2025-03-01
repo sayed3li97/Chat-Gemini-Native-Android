@@ -31,7 +31,7 @@ This guide will walk you through the process of integrating Google AI into your 
 
 ## 1. Sign up or Log in to Google AI Studio
 
-1. Go to [Google AI Studio](https://ai.google) (or the relevant Google AI platform URL).
+1. Go to [Google AI Studio](https://aistudio.google.com/prompts/new_chat)
 2. Sign in with your Google account or create a new one if you don’t have one yet.
 3. Navigate to the **API keys** or **Credentials** section. (Depending on the interface, this might be under **Project Settings** or a similar tab.)
 4. Generate a new API key and copy it to your clipboard.
@@ -90,8 +90,6 @@ apiKey=YOUR_ACTUAL_API_KEY_HERE
 5.  Create a new Pull Request.
 
 ## Contact
-
-**[Add your contact information here if you want people to reach out to you.]**
 
 *   Email: alkamelsayedali@gmail.com   
 *   Instagram: https://www.instagram.com/sayed3li97/
