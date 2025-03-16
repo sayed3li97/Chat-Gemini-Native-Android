@@ -64,6 +64,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.material.icons.filled.Image // Ensure this import is correct
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.ui.draw.clip // Ensure this import is correct
 import androidx.compose.ui.draw.shadow
 
@@ -78,6 +80,10 @@ data class ChatMessage(val text: String? = null, val imageBitmap: Bitmap? = null
 fun ChatScreen(
     chatViewModel: ChatViewModel = viewModel()
 ) {
+    val selectedModel by chatViewModel.selectedModel.collectAsState()
+    var expanded by remember { mutableStateOf(false) }
+    val modelOptions = listOf("gemini-1.5-flash", "gemini-2.0-flash", "gemma-3-27b-it")
+
     // Removed selectedImage state
     var prompt by rememberSaveable { mutableStateOf("") }
     var chatMessages by remember { mutableStateOf(mutableListOf<ChatMessage>()) }
@@ -102,12 +108,25 @@ fun ChatScreen(
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
                 title = {
-                    Text(
-                        stringResource(R.string.app_title),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = stringResource(R.string.app_title),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Spacer(modifier = Modifier.height(2.dp)) // Add spacing between title and model text
+                        Text(
+                            text = "Model: $selectedModel",
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f), // Lighter color
+                            style = MaterialTheme.typography.bodySmall, // Smaller text size
+                            modifier = Modifier.padding(top = 2.dp)
+                        )
+                    }
                 },
                 navigationIcon = { // Example: Add an Icon to the start
                     IconButton(onClick = { /*TODO: Handle navigation*/ }) {
@@ -115,8 +134,22 @@ fun ChatScreen(
                     }
                 },
                 actions = { // Example: Add an Icon to the end
-                    IconButton(onClick = { /*TODO: Handle actions*/ }) {
+                    IconButton(onClick = { expanded = true }) {
                         Icon(Icons.Filled.Settings, "Settings") // Example: Settings icon
+                    }
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        modelOptions.forEach { model ->
+                            DropdownMenuItem(
+                                text = { Text(model) },
+                                onClick = {
+                                    chatViewModel.updateModel(model)
+                                    expanded = false
+                                }
+                            )
+                        }
                     }
                 },
                 modifier = Modifier.shadow(elevation = 2.dp) // Subtle TopAppBar shadow
