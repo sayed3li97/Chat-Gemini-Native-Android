@@ -17,10 +17,21 @@ class ChatViewModel : ViewModel() {
     val uiState: StateFlow<UiState> =
         _uiState.asStateFlow()
 
-    private val generativeModel = GenerativeModel(
-        modelName = "gemini-1.5-flash",
+    private val _selectedModel = MutableStateFlow("gemini-1.5-flash")
+    val selectedModel: StateFlow<String> = _selectedModel.asStateFlow()
+
+    private var generativeModel = GenerativeModel(
+        modelName = _selectedModel.value,
         apiKey = BuildConfig.apiKey
     )
+
+    fun updateModel(modelName: String) {
+        _selectedModel.value = modelName
+        generativeModel = GenerativeModel(
+            modelName = modelName,
+            apiKey = BuildConfig.apiKey
+        )
+    }
 
     fun sendPrompt(
         bitmap: Bitmap?,
